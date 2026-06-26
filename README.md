@@ -1,6 +1,8 @@
-# Mineradio
+# Mineradio macOS
 
-Mineradio 是一款桌面沉浸式音乐播放器，把天气电台、搜索播放、歌词舞台、粒子视觉和 3D 歌单架组合成一个更接近现场感的私人音乐空间。支持 Windows 和 macOS。
+> ⚠️ **重要声明**：本项目是 [Mineradio](https://github.com/XxHuberrr/Mineradio) 的 macOS 适配分支，**原作者为 XxHuberrr**。本仓库仅对 macOS 平台进行适配构建，不改变原有功能与架构。如果你觉得这个项目对你有价值，请前往[原仓库](https://github.com/XxHuberrr/Mineradio)给作者 Star ⭐。
+
+Mineradio 是一款桌面沉浸式音乐播放器，把天气电台、搜索播放、歌词舞台、粒子视觉和 3D 歌单架组合成一个更接近现场感的私人音乐空间。本仓库为 macOS 适配版本。
 
 1.1.0 的核心目标是把 Mineradio 重新整理成一份可公开下载的纯净安装版。
 
