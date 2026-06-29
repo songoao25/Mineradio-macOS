@@ -251,9 +251,12 @@ function getWindowState(win) {
   return {
     isMaximized: win.isMaximized(),
     isNativeFullScreen: win.isFullScreen(),
+    isSimpleFullScreen: process.platform === 'darwin'
+      && typeof win.isSimpleFullScreen === 'function'
+      && win.isSimpleFullScreen(),
     isHtmlFullScreen: htmlFullscreenActive,
     isWindowFullScreen: windowFullscreenActive,
-    isFullScreen: win.isFullScreen() || htmlFullscreenActive || windowFullscreenActive,
+    isFullScreen: isWindowInFullscreen(win) || htmlFullscreenActive || windowFullscreenActive,
     isMinimized: win.isMinimized(),
     isVisible: win.isVisible(),
     isFocused: win.isFocused(),
@@ -673,9 +676,23 @@ function applyWindowedBounds(win) {
   sendWindowState(win);
 }
 
+function isWindowInFullscreen(win) {
+  if (!win || win.isDestroyed()) return false;
+  return win.isFullScreen()
+    || (process.platform === 'darwin'
+      && typeof win.isSimpleFullScreen === 'function'
+      && win.isSimpleFullScreen());
+}
+
 function exitFullscreenToWindow(win) {
   if (!win || win.isDestroyed()) return;
   windowFullscreenActive = false;
+
+  if (process.platform === 'darwin' && typeof win.isSimpleFullScreen === 'function' && win.isSimpleFullScreen()) {
+    win.setSimpleFullScreen(false);
+    setTimeout(() => applyWindowedBounds(win), 120);
+    return;
+  }
 
   if (!win.isFullScreen()) {
     applyWindowedBounds(win);
@@ -696,12 +713,16 @@ function exitFullscreenToWindow(win) {
 
 function toggleFullscreen(win) {
   if (!win || win.isDestroyed()) return;
-  if (win.isFullScreen() || windowFullscreenActive) {
+  if (isWindowInFullscreen(win) || windowFullscreenActive) {
     exitFullscreenToWindow(win);
     return;
   }
   windowFullscreenActive = true;
-  win.setFullScreen(true);
+  if (process.platform === 'darwin' && typeof win.setSimpleFullScreen === 'function') {
+    win.setSimpleFullScreen(true);
+  } else {
+    win.setFullScreen(true);
+  }
   sendWindowState(win);
 }
 
